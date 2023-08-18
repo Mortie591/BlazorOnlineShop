@@ -1,0 +1,41 @@
+﻿@using OnlineStore.Data.Models;
+
+<TelerikCarousel Data="@CarouselData"
+                 Width="512px" Height="384px">
+    <Template>
+        <div class="image-with-text">
+            <p>@context.Name</p>
+            <img src="images/@(context.Id).jpg" alt="Category-Image" width="512" height="384" />
+        </div>
+    </Template>
+</TelerikCarousel>
+
+
+@code {
+    [Parameter]
+    public IEnumerable<Category> CarouselData { get; set; }
+}
+
+<style>
+    /* center the Carousel horizontally */
+    /* k-scrollview is the default component class */
+    .k-scrollview {
+        margin: 0 auto;
+    }
+
+    /* enable absolute positioning inside the Carousel template */
+    .image-with-text {
+        position: relative;
+    }
+
+        /* style the overlay text inside the Carousel */
+        .image-with-text > p {
+            position: absolute;
+            top: 1rem;
+            left: 1.6rem;
+            color: rgba(255, 255, 255, .8);
+            margin: 0;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, .8);
+        }
+</style>

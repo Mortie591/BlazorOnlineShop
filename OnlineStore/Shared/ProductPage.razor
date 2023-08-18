@@ -1,0 +1,19 @@
+﻿<TelerikWindow @bind-Visible="@WindowIsVisible">
+    <WindowTitle>
+        Window Title
+    </WindowTitle>
+    <WindowContent>
+        Window Content ...
+    </WindowContent>
+    <WindowActions>
+        <WindowAction Name="Close" />
+    </WindowActions>
+    <WindowFooter>
+        Window Footer Content ...
+    </WindowFooter>
+</TelerikWindow>
+
+@code {
+    [Parameter]
+    public bool WindowIsVisible { get; set; }
+}

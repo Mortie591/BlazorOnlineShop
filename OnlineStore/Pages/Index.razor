@@ -1,9 +1,98 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+@using OnlineStore.Data.Models;
+@using OnlineStore.Data.Services;
+@using Telerik.DataSource;
+@using Telerik.DataSource.Extensions;
 
-<h1>Hello, world!</h1>
+@inject IDataAccessService dataAccessService
 
-Welcome to your new app.
+<PageTitle>Home</PageTitle>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<h1>Online Store</h1>
+
+<section class="carousel">
+    <Carousel CarouselData="@categories"></Carousel>
+</section>
+<section>
+    <TelerikFilter @ref="FilterRef" @bind-Value="@Value">
+        <FilterFields>
+            <FilterField Name="@(nameof(Category.Name))" Type="@(typeof(string))" Label="Category"></FilterField>
+            <FilterField Name="@(nameof(Product.Title))" Type="@(typeof(string))" Label="Product Name"></FilterField>
+            <FilterField Name="@(nameof(Product.Available))" Type="@(typeof(bool))" Label="In Stock"></FilterField>
+        </FilterFields>
+    </TelerikFilter>
+    <div>
+        <TelerikButton OnClick="@ApplyFilters">Apply!</TelerikButton>
+    </div>
+</section>
+<section class="product-list">
+    @if (products == null || products.Count == 0)
+    {
+        <p class="alert alert-warning">No available products</p>
+    }
+    else
+    {
+        @foreach (var category in data)
+        {
+            <section>
+                <div>
+                    <h3>Products in @category.Name</h3>
+                </div>
+                
+                <container class="k-card-deck justify-content-start flex-wrap">
+                    @foreach (var product in category.CategoryProducts)
+                    {
+                        <Card Item="product">
+                        </Card>
+                            <button @onclick="@(()=> Visible = !Visible )"></button>
+                        <ProductPage WindowIsVisible="@Visible"></ProductPage>
+                    }
+                </container>
+            </section>
+        }
+    }
+</section>
+
+
+
+@code {
+    private List<Product>? products;
+    private List<Category>? categories;
+    private List<Category> data;
+
+    [Parameter]
+    public bool Visible { get; set; }
+
+    TelerikFilter FilterRef { get; set; }
+    public CompositeFilterDescriptor Value { get; set; } = new CompositeFilterDescriptor();
+
+    private void ApplyFilters()
+    {
+        var dataSourceRequest = new DataSourceRequest { Filters = new List<IFilterDescriptor> { Value } };
+
+        var datasourceResult = categories.ToDataSourceResult(dataSourceRequest);
+
+        data = datasourceResult.Data.Cast<Category>().ToList();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var productsResult = await dataAccessService.GetProductsFromJsonAsync();
+        var categoriesResult = await dataAccessService.GetCategoriesFromJsonAsync();
+
+        categories = new List<Category>(categoriesResult);
+        products = new List<Product>(productsResult);
+
+        foreach (var c in categories)
+        {
+            c.CategoryProducts = dataAccessService.GetProductsByCategory(c.Id, products).Take(4);
+        }
+
+        data = new List<Category>(categories);
+
+        ApplyFilters();
+    }
+}
+
+

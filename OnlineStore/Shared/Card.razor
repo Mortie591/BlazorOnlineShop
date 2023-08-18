@@ -1,0 +1,38 @@
+﻿@using OnlineStore.Data.Models;
+<TelerikCard Width="300px">
+    <CardImage Width="250px" Height="280px" Src=@Item.ImageUrl
+    ></CardImage>
+    <CardHeader>
+        <div class="card-title">@Item.Title</div>
+    </CardHeader>
+    <CardBody>
+        <CardActions Class="justify-content-center m-2" Orientation="@CardOrientation.Horizontal">
+            <button class="btn btn-secondary" @onclick="@IncrementItems">Add to cart</button>
+        </CardActions>
+    </CardBody>
+</TelerikCard>
+
+@code {
+    [Parameter]
+    public Product Item { get; set; }
+
+    [Parameter]
+    public int CartItems { get; set; }
+
+    [Parameter] 
+    public Action OnCountChange { get; set; }
+
+    private void IncrementItems()
+    {
+        OnCountChange?.Invoke();
+    }
+}
+
+<style>
+    .card-title{
+        white-space: nowrap;
+        width: auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>

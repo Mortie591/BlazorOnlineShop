@@ -66,3 +66,27 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+/*Telerik styles*/
+
+.k-listview-header {
+    padding: 20px 28px;
+    text-transform: uppercase;
+}
+
+.k-card {
+    padding: 20px;
+    border-width: 0 0 1px 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+    .k-card .k-card-body,
+    .k-card .k-card-actions {
+        padding: 0 8px;
+    }
+
+/*Customized*/
+.card-img{
+    max-width:300px;
+    height:auto;
+}

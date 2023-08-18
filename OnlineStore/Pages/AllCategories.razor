@@ -1,0 +1,57 @@
+﻿@page "/categories"
+
+@using OnlineStore.Data.Models;
+@using OnlineStore.Data.Services;
+@inject IDataAccessService dataAccessService
+@inject NavigationManager UriHelper
+
+<TelerikListView Data=@ListViewData
+                 Pageable="true"
+                 PageSize="5">
+    <HeaderTemplate>
+        <h3>Categories</h3>
+    </HeaderTemplate>
+    <Template>
+        <div class="k-card k-card-horizontal">
+            <div class="k-vbox k-flex-grow">
+                <div class="k-card-body">
+                    <h4 class="k-card-title">@context.Name</h4>
+                    <h5 class="k-card-subtitle">@context.ProductIds.Count() Items</h5>
+                </div>
+                <div class="k-card-actions k-actions-horizontal k-actions-start">
+                    <a href="categories/@context.Id">
+                        <button class="btn w-100 btn-secondary">View Items</button>
+                    </a>
+                </div>
+            </div>
+            <img class="rounded float-left card-img" src="images/@(context.Id).jpg" alt="Category Image" />
+        </div>
+    </Template>
+</TelerikListView>
+
+@code {
+    private IEnumerable<CategoryDto> ListViewData { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        var products = await dataAccessService.GetProductsFromJsonAsync();
+        var categories = await dataAccessService.GetCategoriesFromJsonAsync();
+
+        foreach (var c in categories)
+        {
+            c.CategoryProducts = products.Where(p => p.CategoryId == c.Id).Take(5);
+        }
+
+        ListViewData = categories.Select(x => new CategoryDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                ProductIds = x.CategoryProducts.Select(x => x.Id)
+    });
+    }
+}
