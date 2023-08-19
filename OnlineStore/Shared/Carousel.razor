@@ -5,7 +5,9 @@
     <Template>
         <div class="image-with-text">
             <p>@context.Name</p>
-            <img src="images/@(context.Id).jpg" alt="Category-Image" width="512" height="384" />
+            <a href="categories/@context.Id">
+                <img src="images/@(context.Id).jpg" alt="Category-Image" width="512" height="384" />
+            </a>
         </div>
     </Template>
 </TelerikCarousel>

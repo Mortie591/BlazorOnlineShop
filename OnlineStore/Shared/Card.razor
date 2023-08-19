@@ -1,31 +1,50 @@
 ﻿@using OnlineStore.Data.Models;
+@using OnlineStore.Data.Services;
+
 <TelerikCard Width="300px">
-    <CardImage Width="250px" Height="280px" Src=@Item.ImageUrl
-    ></CardImage>
+    <div @onclick="@(()=> IsVisible = !IsVisible )">
+        <CardImage Width="250px" Height="280px" Src=@Item.ImageUrl></CardImage>
+    </div>
+     @if(@Item.Available){
+    <ProductPage Item="@Item" WindowIsVisible="@IsVisible"></ProductPage>
+    }
     <CardHeader>
         <div class="card-title">@Item.Title</div>
     </CardHeader>
     <CardBody>
-        <CardActions Class="justify-content-center m-2" Orientation="@CardOrientation.Horizontal">
-            <button class="btn btn-secondary" @onclick="@IncrementItems">Add to cart</button>
-        </CardActions>
+        
+        @if (IsOutOfStock)
+        {
+            <CardActions Class="justify-content-center m-2" Orientation="@CardOrientation.Horizontal">
+                <button class="btn btn-outline-dark disabled">Add to cart</button>
+            </CardActions>
+            <div class="text-center">
+                <CardSubTitle>Out of Stock</CardSubTitle>
+            </div>
+        }
+        else
+        {
+            <CardActions Class="justify-content-center m-2" Orientation="@CardOrientation.Horizontal">
+                <button class="btn btn-secondary" @onclick="@AddToCount">Add to cart</button>
+            </CardActions>
+        }
     </CardBody>
 </TelerikCard>
 
 @code {
+    [Inject]
+    private ICartService CartService { get; set; }
+
+    private void AddToCount()
+    {
+        CartService.IncrementCount();
+    }
     [Parameter]
     public Product Item { get; set; }
 
-    [Parameter]
-    public int CartItems { get; set; }
+    private bool IsOutOfStock => Item.Available ? false : true;
 
-    [Parameter] 
-    public Action OnCountChange { get; set; }
-
-    private void IncrementItems()
-    {
-        OnCountChange?.Invoke();
-    }
+    private bool IsVisible { get; set; }
 }
 
 <style>

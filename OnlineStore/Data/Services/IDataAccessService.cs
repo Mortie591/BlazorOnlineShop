@@ -5,9 +5,13 @@ namespace OnlineStore.Data.Services
     public interface IDataAccessService
     {
         IEnumerable<Category> GetCategoriesFromJson();
-        Task<IEnumerable<Product>> GetProductsFromJsonAsync();
+        Category GetCategoryById(int id);
         Task<IEnumerable<Category>> GetCategoriesFromJsonAsync();
-        IEnumerable<int> GetProductIdsByCategory(int categoryId, IEnumerable<Product> products);
-        IEnumerable<Product> GetProductsByCategory(int categoryId, IEnumerable<Product> products);
+        public IEnumerable<Product> GetProductsFromJson();
+        Task<IEnumerable<Product>> GetProductsFromJsonAsync();
+        IEnumerable<int> GetProductIdsByCategory(int categoryId);
+        IEnumerable<Product> GetProductsByCategory(int categoryId);
+        Product GetProductById(int id);
+
     }
 }

@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddTransient<IDataAccessService, DataAccessService>();
+builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddTelerikBlazor();
 
 var app = builder.Build();

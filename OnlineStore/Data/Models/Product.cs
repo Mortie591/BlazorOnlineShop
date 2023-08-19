@@ -4,6 +4,9 @@ namespace OnlineStore.Data.Models
 {
     public class Product
     {
+        private bool isAvailable;
+        private int unitsInStock;
+
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
@@ -26,28 +29,22 @@ namespace OnlineStore.Data.Models
         public int Rating { get; set; }
 
         [JsonPropertyName("unitInStock")]
-        public int UnitInStock { get; set; }
+        public int UnitInStock
+        {
+            get { return unitsInStock; }
+            set
+            {
+                unitsInStock = value;
+                isAvailable = value > 0 ? true : false;
+            }
+        }
 
         public bool Available
         {
             get
             {
-                return this.Available;
-            }
-            private set
-            {
-                if (this.UnitInStock > 0)
-                {
-                    this.Available = true;
-                }
-                else
-                {
-                    this.Available = false;
-                }
+                return isAvailable;
             }
         }
-
-    
-
     }
 }

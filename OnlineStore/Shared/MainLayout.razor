@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using OnlineStore.Data.Services;
+@inject ICartService cartService
+@inherits LayoutComponentBase
 
 <PageTitle>OnlineStore</PageTitle>
 
@@ -9,12 +11,9 @@
 
     <main>
         <div class="top-row px-4">
-            <CascadingValue Value="@CartItems" Name="count">
-                <button class="btn btn-outline-secondary" OnCountChange="@IncrementItems">
-                    <TelerikSvgIcon Icon="@SvgIcon.Cart"></TelerikSvgIcon> @CartItems items
-                </button>
-            </CascadingValue>
-            
+            <button class="btn btn-outline-secondary">
+                <TelerikSvgIcon Icon="@SvgIcon.Cart"></TelerikSvgIcon> @cartService.Count items
+            </button>
         </div>
 
         <TelerikRootComponent>
@@ -23,12 +22,3 @@
     </main>
 </div>
 
-@code{
-    public int CartItems { get; set; }
-
-    private void IncrementItems()
-    {
-        CartItems++;
-        StateHasChanged();
-    }
-}

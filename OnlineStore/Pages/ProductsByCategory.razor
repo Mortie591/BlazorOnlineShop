@@ -1,6 +1,59 @@
 ﻿@page "/categories/{id}"
-<p>@id</p>
+@using OnlineStore.Data.Models;
+@using OnlineStore.Data.Services;
+@using Telerik.DataSource;
+@using Telerik.DataSource.Extensions;
+
+@inject IDataAccessService dataAccessService
+
+<section class="product-list">
+    @if (products == null || products.Count == 0)
+    {
+        <p class="alert alert-warning">No available products</p>
+    }
+    else
+    {
+        <section>
+            <TelerikFilter ValueChanged="@OnValueChanged">
+                <FilterFields>
+                    <FilterField Name="@(nameof(Product.Title))" Type="@(typeof(string))" Label="Product Name"></FilterField>
+                    <FilterField Name="@(nameof(Product.Available))" Type="@(typeof(bool))" Label="In Stock"></FilterField>
+                </FilterFields>
+            </TelerikFilter>
+        </section>
+        <section>
+            <div>
+                <h3>Products in @category.Name</h3>
+            </div>
+            <container class="k-card-deck justify-content-start flex-wrap">
+                @foreach (var product in data)
+                {
+                    <Card Item="product"></Card>
+                }
+            </container>
+        </section>
+    }
+</section>
+
 @code {
     [Parameter]
     public string id { get; set; }
+
+    private List<Product>? products;
+    private Category category;
+    private List<Product> data;
+
+    private void OnValueChanged(CompositeFilterDescriptor filter)
+    {
+        var dataSourceRequest = new DataSourceRequest { Filters = new List<IFilterDescriptor> { filter } };
+        var datasourceResult = products.ToDataSourceResult(dataSourceRequest);
+        data = datasourceResult.Data.Cast<Product>().ToList();
+    }
+    protected override void OnInitialized()
+    {
+        category = dataAccessService.GetCategoryById(int.Parse(id));
+        products = dataAccessService.GetProductsByCategory(int.Parse(id)).ToList();
+
+        data = products;
+    }
 }

@@ -1,19 +1,52 @@
-﻿<TelerikWindow @bind-Visible="@WindowIsVisible">
-    <WindowTitle>
-        Window Title
-    </WindowTitle>
+﻿@using OnlineStore.Data.Models;
+@using System.Globalization;
+<TelerikWindow @bind-Visible="@WindowIsVisible" >
+    <WindowTitle>@Item.Title</WindowTitle>
     <WindowContent>
-        Window Content ...
+        <div class="d-flex">
+            <CardImage class="px-2" Width="250px" Height="280px" Src=@Item.ImageUrl></CardImage>
+            <div>
+                <h4>Product Information:</h4>
+                <p class="text-wrap">@Item.Description</p>
+                <div class="d-flex flex-row">
+                    <p class="px-2">
+                        Price:
+                        <strong class="text-primary">@Item.Price.ToString("C2", CultureInfo.CreateSpecificCulture("bg-BG"))</strong>
+                    </p>
+                    <p>
+                        Delivery on
+                        <strong class="text-primary">@GetDeliveryDate.DayOfWeek, @GetDeliveryDate.ToShortDateString()</strong>
+                    </p>
+                </div>
+            </div>
+            
+        </div>
     </WindowContent>
+    <WindowFooter>
+        <button class="btn btn-secondary w-125" @onclick="@IncrementItems">Add to cart</button>
+    </WindowFooter>
     <WindowActions>
         <WindowAction Name="Close" />
     </WindowActions>
-    <WindowFooter>
-        Window Footer Content ...
-    </WindowFooter>
 </TelerikWindow>
 
 @code {
     [Parameter]
     public bool WindowIsVisible { get; set; }
+
+    [Parameter]
+    public Product Item { get; set; }
+
+    public DateTime GetDeliveryDate { get; } = DateTime.Now.AddDays(3).Date;
+
+    [Parameter]
+    public int CartItems { get; set; }
+
+    [Parameter]
+    public Action OnCountChange { get; set; }
+
+    private void IncrementItems()
+    {
+        OnCountChange?.Invoke();
+    }
 }

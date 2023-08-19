@@ -1,0 +1,14 @@
+﻿@using OnlineStore.Data.Services;
+
+<button class="btn btn-secondary" @onclick="@AddToCount">Add to cart</button>
+
+@code{
+
+    [Inject]
+    private ICartService CountService { get; set; }
+
+    private void AddToCount()
+    {
+        CountService.IncrementCount();
+    }
+}

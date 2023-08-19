@@ -7,6 +7,7 @@ namespace OnlineStore.Data.Services
     {
         private const string categoriesPath = "Data/Source/categories.json";
         private const string productsPath = "Data/Source/products.json";
+        
         private IEnumerable<Product> products;
         private IEnumerable<Category> categories;
         public Task<IEnumerable<Category>> GetCategoriesFromJsonAsync()
@@ -36,18 +37,42 @@ namespace OnlineStore.Data.Services
             return categories ?? new List<Category>();
         }
 
-        public IEnumerable<Product> GetProductsByCategory(int categoryId, IEnumerable<Product> products)
+        public IEnumerable<Product> GetProductsFromJson()
         {
-            var productsByCategory = products.Where(p => p.CategoryId == categoryId);
-            return productsByCategory;
+            var json = File.ReadAllText(productsPath);
+
+            products = JsonSerializer.Deserialize<IEnumerable<Product>>(json);
+
+            return products ?? new List<Product>();
         }
 
-        public IEnumerable<int> GetProductIdsByCategory(int categoryId, IEnumerable<Product> products)
+        public IEnumerable<Product> GetProductsByCategory(int categoryId)
         {
-            var productIds = products.Where(x => x.CategoryId == categoryId).Select(x => x.Id);
+            products = this.GetProductsFromJson().Where(x=>x.CategoryId==categoryId);
+            
+            return products;
+        }
+
+        public IEnumerable<int> GetProductIdsByCategory(int categoryId)
+        {
+            var productIds = this.GetProductsFromJson()
+                .Where(x => x.CategoryId == categoryId).Select(x => x.Id);
 
             return productIds;
         }
 
+        public Category GetCategoryById(int id)
+        {
+            var category = this.GetCategoriesFromJson().FirstOrDefault(x => x.Id==id);
+
+            return category;
+        }
+
+        public Product GetProductById(int id)
+        {
+            var product = this.GetProductsFromJson().FirstOrDefault(x => x.Id == id);
+
+            return product;
+        }
     }
 }
