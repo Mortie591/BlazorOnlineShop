@@ -13,6 +13,7 @@
     }
     else
     {
+        <h3>Products in @category.Name</h3>
         <section>
             <TelerikFilter ValueChanged="@OnValueChanged">
                 <FilterFields>
@@ -22,9 +23,6 @@
             </TelerikFilter>
         </section>
         <section>
-            <div>
-                <h3>Products in @category.Name</h3>
-            </div>
             <container class="k-card-deck justify-content-start flex-wrap">
                 @foreach (var product in data)
                 {
