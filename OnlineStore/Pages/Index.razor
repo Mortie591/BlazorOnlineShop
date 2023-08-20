@@ -8,42 +8,43 @@
 @inject IDataAccessService dataAccessService
 
 <PageTitle>Home</PageTitle>
-
-<h1>Online Store</h1>
-
-<section class="carousel">
-    <Carousel CarouselData="@categories"></Carousel>
-</section>
-<section>
-    <TelerikFilter ValueChanged="@OnValueChanged">
-        <FilterFields>
-            <FilterField Name="@(nameof(Category.Name))" Type="@(typeof(string))" Label="Category"></FilterField>
-        </FilterFields>
-    </TelerikFilter>
-</section>
-<section class="product-list">
-    @if (products == null || products.Count == 0)
-    {
-        <p class="alert alert-warning">No available products</p>
-    }
-    else
-    {
-        @foreach (var category in data)
+<container>
+    <h1>Online Store</h1>
+    <section class="carousel">
+        <Carousel CarouselData="@categories"></Carousel>
+    </section>
+    <section>
+        <TelerikFilter ValueChanged="@OnValueChanged">
+            <FilterFields>
+                <FilterField Name="@(nameof(Category.Name))" Type="@(typeof(string))" Label="Category"></FilterField>
+            </FilterFields>
+        </TelerikFilter>
+    </section>
+    <section class="product-list">
+        @if (products == null || products.Count == 0)
         {
-            <section>
-                <div>
-                    <h3>Products in @category.Name</h3>
-                </div>
-                <container class="k-card-deck justify-content-start flex-wrap">
-                    @foreach (var product in category.CategoryProducts)
-                    {
-                        <Card Item="product"></Card>
-                    }
-                </container>
-            </section>
+            <p class="alert alert-warning">No available products</p>
         }
-    }
-</section>
+        else
+        {
+            @foreach (var category in data)
+            {
+                <section>
+                    <div>
+                        <h3>Products in @category.Name</h3>
+                    </div>
+                    <container class="k-card-deck justify-content-start flex-wrap">
+                        @foreach (var product in category.CategoryProducts)
+                        {
+                            <Card Item="product"></Card>
+                        }
+                    </container>
+                </section>
+            }
+        }
+    </section>
+</container>
+
 
 @code {
     private List<Product>? products;

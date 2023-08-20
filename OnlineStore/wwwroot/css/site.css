@@ -66,6 +66,7 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
 /*Telerik styles*/
 
 .k-listview-header {
@@ -86,6 +87,7 @@ a, .btn-link {
     }
 
 /*Customized*/
+
 .card-img{
     max-width:300px;
     height:auto;
